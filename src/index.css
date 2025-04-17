@@ -1,0 +1,23 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+@import "tailwindcss";
+
+/* @theme {
+    --font-title: "Pacifico", cursive;
+    --color-sidebar: oklch(19.8% 0.07 227.392)
+
+} */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal;
+    /* background-color: #fffefa; */
+    background-color: #F6F5F2;
+}
+
