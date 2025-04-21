@@ -1,27 +1,35 @@
-import Project from "./Project"
+import SelectedProject from "./SelectedProject"
 
 
-const liStyle = `
-cursor-pointer hover:bg-stone-200 p-1 pl-2 rounded-xl
-overflow-hidden whitespace-nowrap text-ellipsis
-`
 
-export default function Menu({projects}) {
+export default function Menu({projects, onSelectProject, selectedProjectId}) {
     return (
         <>
         <menu className="flex flex-col mt-[2rem] gap-4">
         <ul>
           {
-            projects.map((project, index)=> {
+            projects.map((project)=> {
+
+              let liStyle = `
+              hover:bg-stone-200 p-1 pl-2 rounded-xl
+              overflow-hidden whitespace-nowrap text-ellipsis my-1
+              `
+
+              if(project.id === selectedProjectId ) liStyle += ' bg-gray-200'
+              else  liStyle  
+
+
                 return (
-                    <li className={liStyle}  key={`${project.title} ${index}`}>
-                        <a href={`#${project.title}_${index}`}>{project.title}</a></li>
+                    <li  className={liStyle}  key={project.id}>
+                      <button onClick={()=> onSelectProject(project.id)} 
+                      className="cursor-pointer text-left w-full">{project.title}</button>
+                    </li>
                 )
             })
           }
           </ul>
         </menu>
-        <Project projects={projects}/>
+     
         </>
     )
 }

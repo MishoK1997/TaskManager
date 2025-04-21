@@ -8,11 +8,11 @@ text-gray-900 bg-[#F6F5F2] border border-gray-300
   cursor-pointer
   `
 export const styleForm = `
-flex flex-col pt-[5rem]   w-full
+flex flex-col pt-[5rem]   w-full mr-8
 `
 
 export const labelStyle = `
-block uppercase tracking-wide text-gray-700  font-bold mb-3
+block uppercase tracking-wide text-stone-500  font-bold mb-3
 `
 export const inputStyle = `
 px-4 mb-5 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-stone-300 focus:border-transparent transition
