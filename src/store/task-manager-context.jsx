@@ -51,13 +51,69 @@ export default  function TaskManangerProvider ({ children }) {
     })
    }
   
+   function handleAddTast(text) {
+    setProjectsState(prevState => {
+      const taskId = Math.random();
+      const newTask = {
+        text: text,
+        projectId: prevState.selectedProjectId,
+        id: taskId
+      };
+
+      return {
+        ...prevState, 
+        tasks: [newTask, ...prevState.tasks]
+      }
+    })
+  }
+
+   
+  function handleDeleteTask(id) {
+    setProjectsState(prevState => {
+       return {
+        ...prevState,
+        tasks: prevState.tasks.filter(task=> task.id != id)
+       }
+    })
+  }
+
+
+   function handleDeleteProject() { 
+      setProjectsState(prevState => {
+        return {
+          ...prevState,
+          selectedProjectId: undefined,
+          projects: prevState.projects
+          .filter(project => project.id !== prevState.selectedProjectId)
+        }
+      })
+   }
+
+  // Function to set an ID of selected project
+  function handleSelectProject(id) {
+    setProjectsState(prevState => {
+      return {
+        ...prevState,
+        selectedProjectId: id
+      }
+    })
+  }
+
+   // Display selected project 
+ const selectedProject = projectsState.projects
+ .find(project => project.id === projectsState.selectedProjectId)
+
 
     return (
         <TaskManagerContext.Provider value={{projectsState,
-        setProjectsState,
         handlerStartAddProject,
         handlerCancelAddProject,
-        handlerAddProject}}>
+        handlerAddProject,
+        handleAddTast,
+        handleDeleteTask,
+        handleDeleteProject,
+        handleSelectProject,
+        selectedProject}}>
             {children}
         </TaskManagerContext.Provider>
     );

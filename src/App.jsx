@@ -10,71 +10,9 @@ import { TaskManagerContext } from "./store/task-manager-context";
 
 function AppContent () {
 
-  const {projectsState, setProjectsState, handlerStartAddProject, handlerCancelAddProject} = useContext(TaskManagerContext)
+  const {projectsState} = useContext(TaskManagerContext)
   
-  
-  function handleAddTast(text) {
-    setProjectsState(prevState => {
-      const taskId = Math.random();
-      const newTask = {
-        text: text,
-        projectId: prevState.selectedProjectId,
-        id: taskId
-      };
-
-      return {
-        ...prevState, 
-        tasks: [newTask, ...prevState.tasks]
-      }
-    })
-  }
-  function handleDeleteTask(id) {
-    setProjectsState(prevState => {
-       return {
-        ...prevState,
-        tasks: prevState.tasks.filter(task=> task.id != id)
-       }
-    })
-  }
-
-  // Function to set an ID of selected project
-  function handleSelectProject(id) {
-    setProjectsState(prevState => {
-      return {
-        ...prevState,
-        selectedProjectId: id
-      }
-    })
-  }
-
- 
- 
-
-
- function handleDeleteProject() { 
-    setProjectsState(prevState => {
-      return {
-        ...prevState,
-        selectedProjectId: undefined,
-        projects: prevState.projects
-        .filter(project => project.id !== prevState.selectedProjectId)
-      }
-    })
- }
-
- // Display selected project 
- const selectedProject = projectsState.projects
- .find(project => project.id === projectsState.selectedProjectId)
-
-  useEffect(()=> console.log(selectedProject))
-  useEffect(()=> console.log(projectsState))
-
-  let content = <SelectedProject  onAddTask={handleAddTast}
-   onDeleteTask={handleDeleteTask} 
-   project={selectedProject} 
-   deleteProject={handleDeleteProject}
-   tasks={projectsState.tasks}
-   />
+  let content = <SelectedProject   />
 
   // Another display logic for both none selected and project creation interface
   if(projectsState.selectedProjectId === null) 
@@ -82,22 +20,15 @@ function AppContent () {
   else if(projectsState.selectedProjectId === undefined) 
     content = <NoProjectSelected/>
 
-
-
   return (
     <>
       <main className="h-screen my-8 flex gap-10 flex-row w-[100vw]">
-        <Sidebar  onStartAddProject={handlerStartAddProject}
-          projects={projectsState.projects}
-          onSelectProject={handleSelectProject}
-          selectedProjectId={projectsState.selectedProjectId}
-        /> 
+        <Sidebar/> 
         {content}
       </main>
     </>
 
   )
-
 }
 
 

@@ -1,6 +1,7 @@
 import Menu from "./Menu"
 import Button from "./Button"
-
+import { TaskManagerContext } from "../store/task-manager-context"
+import { useContext } from "react"  
 
 
 // TailwindCSS style
@@ -14,9 +15,9 @@ const asideStyle = `flex flex-col gap-4 bg-stone-50 p-[1.9rem] max-w-[13rem] min
     via-neutral-300 to-transparent 
 `
 
-export default function Sidebar({ onStartAddProject, projects, onSelectProject, selectedProjectId}) { 
+export default function Sidebar() { 
 
-
+    const {handlerStartAddProject} = useContext(TaskManagerContext) 
    
     
 
@@ -25,8 +26,8 @@ export default function Sidebar({ onStartAddProject, projects, onSelectProject, 
         <aside className={asideStyle}>
             <header className="text-center md:text-xl font-bold text-stone-500"><h2>YOUR PROJECTS</h2></header>
             <hr className={dividerStyle} />
-           <Button onClick={onStartAddProject}>+ Create Project</Button>
-           <Menu projects={projects} onSelectProject={onSelectProject} selectedProjectId={selectedProjectId}/>
+           <Button onClick={handlerStartAddProject}>+ Create Project</Button>
+           <Menu />
         </aside>
     )
 }

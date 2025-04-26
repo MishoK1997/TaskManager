@@ -1,25 +1,29 @@
+import { useContext } from "react";
 import NewTaks from "./NewTask";
+import  {TaskManagerContext}  from "../store/task-manager-context";
 
 
-export default function Tasks ({tasks, onAdd, onDelete, project}) {
- 
+export default function Tasks () {
+    
 
-    const isTaskPro = tasks.some(task=> task.projectId === project.id)
+    const { handleDeleteTask, selectedProject, projectsState} = useContext(TaskManagerContext)
+
+    const isTaskPro = projectsState.tasks.some(task=> task.projectId === selectedProject.id)
 
     return (
         <section>
             <h2 className="text-2xl font-bold text-stone-700 mb-4">Tasks</h2>
-            <NewTaks onAdd={onAdd} />
+            <NewTaks  />
             {}
             {(!isTaskPro) && (
                 <p className="text-stone-800 mb-4">
                     This project doesn't have any tasks yet.
                 </p>
             )}
-            {(isTaskPro && tasks.length > 0 )&& (
+            {(isTaskPro && projectsState.tasks.length > 0 )&& (
                 <ul className="p-4 mt-8 rounded-md bg-stone-200">
-                    {tasks
-                        .filter(task => task.projectId == project.id)
+                    {projectsState.tasks
+                        .filter(task => task.projectId == selectedProject.id)
                         .map(task => (
                             <li
                                 key={`${task.text}_${task.id}`}
@@ -27,7 +31,7 @@ export default function Tasks ({tasks, onAdd, onDelete, project}) {
                             >
                                 <span>{task.text}</span>
                                 <button
-                                    onClick={() => onDelete(task.id)}
+                                    onClick={() => handleDeleteTask(task.id)}
                                     className="text-stone-800 cursor-pointer hover:text-red-500"
                                 >
                                     Clear

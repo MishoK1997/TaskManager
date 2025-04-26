@@ -1,10 +1,12 @@
 import Input from "./Input"
 import Button from "./Button"
-import {useState, useRef, useEffect} from 'react'
+import {useState, useRef, useContext, useEffect} from 'react'
 import Modal from "./Modal"
+import { TaskManagerContext } from "../store/task-manager-context"
 
+export default function NewTaks() {
 
-export default function NewTaks({onAdd}) {
+    const {handleAddTast} = useContext(TaskManagerContext)
 
     // const [enteredTask, setEnteredTask] = useState()
 
@@ -28,7 +30,7 @@ export default function NewTaks({onAdd}) {
             return 
         }
 
-        onAdd(taskInput.current.value)
+        handleAddTast(taskInput.current.value)
         taskInput.current.value = ""
     }
 
