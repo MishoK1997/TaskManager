@@ -1,17 +1,17 @@
 
 import Sidebar from "./components/Sidebar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import NewProjcet from "./components/NewProject";
 import NoProjectSelected from "./components/NoProjectSelected";
 import SelectedProject from "./components/SelectedProject";
+import TaskManangerProvider from "./store/task-manager-context";
+import { TaskManagerContext } from "./store/task-manager-context";
 
-function App () {
 
-  const [projectsState, setProjectsState] = useState({
-    selectedProjectId: undefined,
-    projects: [],
-    tasks: []
-  })
+function AppContent () {
+
+  const {projectsState, setProjectsState, handlerStartAddProject, handlerCancelAddProject} = useContext(TaskManagerContext)
+  
   
   function handleAddTast(text) {
     setProjectsState(prevState => {
@@ -47,38 +47,9 @@ function App () {
     })
   }
 
-  function handlerStartAddProject ()  {
-    setProjectsState(prevState => {
-          return {
-            ...prevState,
-            selectedProjectId: null
-          }
-    })
-  }
  
- function handlerCancelAddProject () {
-  setProjectsState(prevState => {
-    return {
-      ...prevState,
-      selectedProjectId: undefined
-    }
-  })
- }
+ 
 
- // This function adds a project and store into the state.
- function handlerAddProject (projectData) {
-  setProjectsState( prevState => {
-    const newProject = {
-      ...projectData,
-      id: Math.random()
-    }
-    return {
-      ...prevState,
-      selectedProjectId: undefined,
-      projects: [...prevState.projects, newProject]
-    }
-  })
- }
 
  function handleDeleteProject() { 
     setProjectsState(prevState => {
@@ -107,10 +78,9 @@ function App () {
 
   // Another display logic for both none selected and project creation interface
   if(projectsState.selectedProjectId === null) 
-    content = <NewProjcet onCancelAddProject={handlerCancelAddProject}
-  onAdd={handlerAddProject} />
+    content = <NewProjcet  />
   else if(projectsState.selectedProjectId === undefined) 
-    content = <NoProjectSelected onStartAddProject={handlerStartAddProject}/>
+    content = <NoProjectSelected/>
 
 
 
@@ -131,4 +101,11 @@ function App () {
 }
 
 
-export default App;
+export default function App (){
+  return (
+
+    <TaskManangerProvider>
+      <AppContent />
+    </TaskManangerProvider>
+  )
+};

@@ -1,9 +1,10 @@
 
-import {useRef} from "react";
+import {useRef, useContext} from "react";
 import { createPortal } from "react-dom";
 import { styleBtn, styleForm } from "./InputCSS";
 import Input from "./Input";
 import Modal from "./Modal";
+import { TaskManagerContext } from "../store/task-manager-context";
 
 const headStyle = `
 italic font-bold  pt-10
@@ -11,11 +12,13 @@ text-xl sm:text-1xl md:text-1xl lg:text-1xl
 text-center text-stone-500 mb-8
 `
 
-export default function NewProjcet ({onCancelAddProject, onAdd}){
+export default function NewProjcet (){
     const modal = useRef()
     const title = useRef()
     const description = useRef()
     const dueDate = useRef()
+
+    const {handlerCancelAddProject, handlerAddProject} = useContext(TaskManagerContext)
 
     function handleSave() {
         const enteredTitle = title.current.value;
@@ -29,7 +32,7 @@ export default function NewProjcet ({onCancelAddProject, onAdd}){
         return ;
      }
 
-        onAdd({
+     handlerAddProject({
             title: enteredTitle,
             description: enteredDescription,
             dueDate: enteredDueDate
@@ -48,7 +51,7 @@ export default function NewProjcet ({onCancelAddProject, onAdd}){
         className={styleForm}>
         <ul className="flex flex-row justify-end">
             <li><button 
-            onClick={onCancelAddProject}
+            onClick={handlerCancelAddProject}
             className={styleBtn} type="reset">Cancel</button>
             </li>
             <li><button 
