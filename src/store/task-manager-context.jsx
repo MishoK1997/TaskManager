@@ -1,102 +1,111 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useReducer } from "react";
 
 
 
 export const TaskManagerContext = createContext(null);
 
+function taskManagerReducer( state, action){
+  switch (action.type){
+  case 'START_ADD_PROJECT':
+    return {
+      ...state,
+      selectedProjectId: null
+    }
+  case 'CANCEL_ADD_PROJECT':
+    return {
+      ...state,
+      selectedProjectId: undefined
+    }
+  case 'ADD_PROJECT':
+    const newProject = {
+      ...action.projectData,
+      id: Math.random()
+    }
+    return {
+      ...state,
+      selectedProjectId: undefined,
+      projects: [...state.projects, newProject]
+    }
+  case 'ADD_TASK':
+    const taskId = Math.random();
+    const newTask = {
+      text: action.text,
+      projectId: state.selectedProjectId,
+      id: taskId
+    };
+
+    return {
+      ...state, 
+      tasks: [newTask, ...state.tasks]
+    }
+  case 'DELETE_TASK':
+    return {
+      ...state,
+      tasks: state.tasks.filter(task=> task.id != action.id)
+     }
+  case 'DELETE_PROJECT':
+    return {
+      ...state,
+      selectedProjectId: undefined,
+      projects: state.projects
+      .filter(project => project.id !== state.selectedProjectId)
+    }
+  case 'SELECT_PROJECT':
+    return {
+      ...state,
+      selectedProjectId: action.id
+    }
+  
+      default:  
+        return state;
+  }
+}
+
 
 export default  function TaskManangerProvider ({ children }) {
     //The state to manage the projects and tasks, with initial values
-    const [projectsState, setProjectsState] = useState({
-        selectedProjectId: undefined,
-        projects: [],
-        tasks: []
-      })
-
-/**
-  * Functions section
-  * 
-*/
+    // const [projectsState, setProjectsState] = useState({
+    //     selectedProjectId: undefined,
+    //     projects: [],
+    //     tasks: []
+    //   })
     
+  const [ projectsState, projectsDispatch] = useReducer(taskManagerReducer, {
+    selectedProjectId: undefined,
+    projects: [],
+    tasks: []
+  })
+
   function handlerStartAddProject ()  {
-    setProjectsState(prevState => {
-          return {
-            ...prevState,
-            selectedProjectId: null
-          }
-    })
+    projectsDispatch({type: 'START_ADD_PROJECT'})
   }
 
   function handlerCancelAddProject () {
-    setProjectsState(prevState => {
-      return {
-        ...prevState,
-        selectedProjectId: undefined
-      }
-    })
-   }
+    projectsDispatch({type: 'CANCEL_ADD_PROJECT'})
+  }
 
     // This function adds a project and store into the state.
  function handlerAddProject (projectData) {
-    setProjectsState( prevState => {
-      const newProject = {
-        ...projectData,
-        id: Math.random()
-      }
-      return {
-        ...prevState,
-        selectedProjectId: undefined,
-        projects: [...prevState.projects, newProject]
-      }
-    })
-   }
+    projectsDispatch({type: 'ADD_PROJECT',projectData })
+  }
   
    function handleAddTast(text) {
-    setProjectsState(prevState => {
-      const taskId = Math.random();
-      const newTask = {
-        text: text,
-        projectId: prevState.selectedProjectId,
-        id: taskId
-      };
-
-      return {
-        ...prevState, 
-        tasks: [newTask, ...prevState.tasks]
-      }
-    })
+    projectsDispatch( {type: 'ADD_TASK', text})
   }
 
    
   function handleDeleteTask(id) {
-    setProjectsState(prevState => {
-       return {
-        ...prevState,
-        tasks: prevState.tasks.filter(task=> task.id != id)
-       }
-    })
+    projectsDispatch({type: 'DELETE_TASK', id})
   }
 
 
    function handleDeleteProject() { 
-      setProjectsState(prevState => {
-        return {
-          ...prevState,
-          selectedProjectId: undefined,
-          projects: prevState.projects
-          .filter(project => project.id !== prevState.selectedProjectId)
-        }
-      })
+    projectsDispatch({type: 'DELETE_PROJECT'})
    }
 
   // Function to set an ID of selected project
   function handleSelectProject(id) {
-    setProjectsState(prevState => {
-      return {
-        ...prevState,
-        selectedProjectId: id
-      }
-    })
+    projectsDispatch({type: 'SELECT_PROJECT', id})
   }
 
    // Display selected project 
@@ -105,7 +114,7 @@ export default  function TaskManangerProvider ({ children }) {
 
 
     return (
-        <TaskManagerContext.Provider value={{projectsState,
+        <TaskManagerContext value={{projectsState,
         handlerStartAddProject,
         handlerCancelAddProject,
         handlerAddProject,
@@ -115,6 +124,6 @@ export default  function TaskManangerProvider ({ children }) {
         handleSelectProject,
         selectedProject}}>
             {children}
-        </TaskManagerContext.Provider>
+        </TaskManagerContext>
     );
 }
